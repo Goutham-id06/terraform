@@ -10,6 +10,7 @@ resource "aws_vpc" "dev" {
 resource "aws_subnet" "dev-subnet" {
     cidr_block = var.subnet_cidr
     vpc_id = aws_vpc.dev.id
+    availability_zone = var.availability_zone
     tags = {
         Name ="my_subnet"
     }
