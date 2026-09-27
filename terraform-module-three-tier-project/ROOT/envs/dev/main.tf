@@ -168,7 +168,6 @@ module "frontend_launchtemplate" {
 module "backend_launchtemplate" {
 
   source = "../../modules/backend/launch-template"
-  #source = "../../modules/backend/launch-template"
   aws_region   = "us-east-1"
   project_name = "three-tier"
   #backend_ami    = module.backend_launchtemplate.ami.id
@@ -186,7 +185,6 @@ module "backend_launchtemplate" {
 
 module "asg-backend" {
   source = "../../modules/backend/asg"
-  #source = "../../modules/backend/asg"
   aws_region   = "us-east-1"
   project_name = "books-three-tier"
 

@@ -1,13 +1,13 @@
 
 # Module-Three-Tier apply flow 
 ```
-terraform apply -target=module.vpc
-terraform apply -target=module.bastion
-terraform apply -target=module.frontend-ec2
-terraform apply -target=module.backend-ec2
-terraform apply -target=module.frontend_alb
-terraform apply -target=module.backend_alb
-terraform apply -target=module.rds
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.bastion -auto-approve
+terraform apply -target=module.frontend-ec2 -auto-approve
+terraform apply -target=module.backend-ec2 -auto-approve
+terraform apply -target=module.frontend_alb -auto-approve
+terraform apply -target=module.backend_alb -auto-approve
+terraform apply -target=module.rds -auto-approve
 ```
 - now connect to backend and frontend ec2s deploy the application
 - in frontend connfig file give backend loadbalncer url
