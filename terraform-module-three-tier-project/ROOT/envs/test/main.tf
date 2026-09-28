@@ -43,8 +43,8 @@ module "vpc" {
   private_subnet_4_cidr = "10.0.6.0/24"
   private_subnet_5_cidr = "10.0.7.0/24"
   private_subnet_6_cidr = "10.0.8.0/24"
-  availability_zone_1a  = "us-east-1a"
-  availability_zone_1b  = "us-east-1b"
+  availability_zone_1a  = "us-west-2a"
+  availability_zone_1b  = "us-west-2b"
   allowed_ssh_cidr      = ["0.0.0.0/0"]
 }
 
@@ -54,7 +54,7 @@ module "vpc" {
 # ─────────────────────────────
 module "frontend-ec2" {
   source                = "../../modules/frontend/ec2"
-  aws_region            = "us-east-1"
+  aws_region            = "us-west-2"
   ami                   = "ami-00ca32bbc84273381"
   instance_type         = "t3.micro"
   key_name              = "asd"
@@ -69,7 +69,7 @@ module "frontend-ec2" {
 # ─────────────────────────────
 module "backend-ec2" {
   source                = "../../modules/backend/ec2"
-  aws_region            = "us-east-1"
+  aws_region            = "us-west-2"
   ami                   = "ami-00ca32bbc84273381"
   instance_type         = "t3.micro"
   key_name              = "asd"
@@ -83,7 +83,7 @@ module "backend-ec2" {
 # ─────────────────────────────
 module "bastion" {
   source                = "../../modules/bastion"
-  aws_region            = "us-east-1"
+  aws_region            = "us-west-2"
   ami                   = "ami-00ca32bbc84273381"
   instance_type         = "t3.micro"
   key_name              = "asd"
@@ -98,7 +98,7 @@ module "bastion" {
 # ─────────────────────────────
 module "frontend_alb" {
   source            = "../../modules/frontend/loadbalancer-frontend"
-  aws_region        = "us-east-1"
+  aws_region        = "us-west-2"
   vpc_id            = module.vpc.vpc_id
   subnets           = module.vpc.public_subnets
   security_group_id = module.vpc.alb_frontend_sg_id
@@ -112,7 +112,7 @@ module "frontend_alb" {
 # ─────────────────────────────
 module "backend_alb" {
   source            = "../../modules/backend/loadbalancer-backend"
-  aws_region        = "us-east-1"
+  aws_region        = "us-west-2"
   vpc_id            = module.vpc.vpc_id
   subnets           = module.vpc.public_subnets
   security_group_id = module.vpc.alb_backend_sg_id
@@ -126,7 +126,7 @@ module "backend_alb" {
 # ─────────────────────────────
 module "rds" {
   source            = "../../modules/database"
-  aws_region        = "us-east-1"
+  aws_region        = "us-west-2"
   project_name      = "three-tier"
   identifier        = "book-rds"
   allocated_storage = 20
@@ -152,7 +152,7 @@ module "frontend_launchtemplate" {
 
   source = "../../modules/frontend/launch-template"
   #source = "../../modules/frontend/launch-template"
-  aws_region   = "us-east-1"
+  aws_region   = "us-west-2"
   project_name = "three-tier"
   #frontend_ami   = module.frontend_launchtemplate.ami.id
   instance_type         = "t3.micro"
@@ -168,7 +168,7 @@ module "frontend_launchtemplate" {
 module "backend_launchtemplate" {
 
   source = "../../modules/backend/launch-template"
-  aws_region   = "us-east-1"
+  aws_region   = "us-west-2"
   project_name = "three-tier"
   #backend_ami    = module.backend_launchtemplate.ami.id
   instance_type         = "t3.micro"
@@ -185,7 +185,7 @@ module "backend_launchtemplate" {
 
 module "asg-backend" {
   source = "../../modules/backend/asg"
-  aws_region   = "us-east-1"
+  aws_region   = "us-west-2"
   project_name = "books-three-tier"
 
 
@@ -209,7 +209,7 @@ module "asg-backend" {
 module "asg-frontend" {
   source = "../../modules/frontend/asg"
   # source = "../../modules/frontend/asg"
-  aws_region   = "us-east-1"
+  aws_region   = "us-west-2"
   project_name = "books-three-tier"
 
   # Frontend
