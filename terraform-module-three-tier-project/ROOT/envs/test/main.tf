@@ -55,7 +55,7 @@ module "vpc" {
 module "frontend-ec2" {
   source                = "../../modules/frontend/ec2"
   aws_region            = "us-west-2"
-  ami                   = "ami-00ca32bbc84273381"
+  ami                   = "ami-07d9128fdd49fb51a"
   instance_type         = "t3.micro"
   key_name              = "asd"
   subnet_id             = module.vpc.public_subnets[0]
@@ -70,7 +70,7 @@ module "frontend-ec2" {
 module "backend-ec2" {
   source                = "../../modules/backend/ec2"
   aws_region            = "us-west-2"
-  ami                   = "ami-00ca32bbc84273381"
+  ami                   = "ami-07d9128fdd49fb51a"
   instance_type         = "t3.micro"
   key_name              = "asd"
   subnet_id             = module.vpc.public_subnets[0]
@@ -84,7 +84,7 @@ module "backend-ec2" {
 module "bastion" {
   source                = "../../modules/bastion"
   aws_region            = "us-west-2"
-  ami                   = "ami-00ca32bbc84273381"
+  ami                   = "ami-07d9128fdd49fb51a"
   instance_type         = "t3.micro"
   key_name              = "asd"
   subnet_id             = module.vpc.public_subnets[0]
