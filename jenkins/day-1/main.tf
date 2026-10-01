@@ -165,7 +165,7 @@ resource "aws_db_instance" "mysql" {
   publicly_accessible = true
 
   multi_az               = true
-  backup_retention_period = 2
+  backup_retention_period = 1
 
   depends_on = [
     aws_db_subnet_group.db-subnet
