@@ -8,6 +8,7 @@ provider "aws" {
 
 resource "aws_vpc" "dev" {
   cidr_block = "10.0.0.0/16"
+
   enable_dns_support   = true
   enable_dns_hostnames = true
 
@@ -18,11 +19,13 @@ resource "aws_vpc" "dev" {
 
 # -----------------------------
 # SUBNET 1
+# Availability Zone: us-east-1a
 # -----------------------------
 
 resource "aws_subnet" "sub-1" {
-  vpc_id     = aws_vpc.dev.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id            = aws_vpc.dev.id
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "us-east-1a"
 
   tags = {
     Name = "subnet-1"
@@ -31,11 +34,13 @@ resource "aws_subnet" "sub-1" {
 
 # -----------------------------
 # SUBNET 2
+# Availability Zone: us-east-1c
 # -----------------------------
 
 resource "aws_subnet" "sub-2" {
-  vpc_id     = aws_vpc.dev.id
-  cidr_block = "10.0.2.0/24"
+  vpc_id            = aws_vpc.dev.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "us-east-1c"
 
   tags = {
     Name = "subnet-2"
@@ -166,7 +171,9 @@ resource "aws_db_instance" "mysql" {
   skip_final_snapshot = true
   publicly_accessible = true
 
-  multi_az               = true
+  multi_az = true
+
+  # Minimum 1 day as required
   backup_retention_period = 1
 
   depends_on = [
