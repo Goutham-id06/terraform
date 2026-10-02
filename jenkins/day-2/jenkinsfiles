@@ -1,0 +1,271 @@
+//Choice parameters using console
+
+pipeline {
+    agent any
+
+    stages {
+
+        stage('git clone') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/Goutham-id06/terraform.git'
+            }
+        }
+
+        stage('init') {
+            steps {
+                dir('day-1') {
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        stage('plan') {
+            steps {
+                dir('day-1') {
+                    sh 'terraform plan'
+                }
+            }
+        }
+
+        stage('apply') {
+            steps {
+                dir('day-1') {
+                    sh "terraform ${action} -auto-approve"
+                }
+            }
+        }
+    }
+}
+
+//choice parameters with code
+pipeline {
+    agent any
+
+    parameters {
+        choice(
+            name: 'ACTION',
+            choices: ['Apply', 'Destroy'],
+            description: 'Select the Terraform action'
+        )
+    }
+
+    stages {
+
+        stage('Git Clone') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/Goutham-id06/terraform.git'
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                dir('day-1') {
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        stage('Terraform Plan') {
+            when {
+                expression {
+                    params.ACTION == 'Apply'
+                }
+            }
+            steps {
+                dir('day-1') {
+                    sh 'terraform plan -out=tfplan'
+                }
+            }
+        }
+
+        stage('Approval') {
+            steps {
+                input(
+                    message: "You selected ${params.ACTION}. Continue?",
+                    ok: "Proceed"
+                )
+            }
+        }
+
+        stage('Execute') {
+            steps {
+                script {
+                    if (params.ACTION == 'Apply') {
+                        dir('day-1') {
+                            sh 'terraform apply -auto-approve tfplan'
+                        }
+                    } else {
+                        dir('day-1') {
+                            sh 'terraform destroy -auto-approve'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+//approval
+pipeline {
+    agent any
+
+    stages {
+
+        stage('git checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/Goutham-id06/terraform.git'
+            }
+        }
+
+        stage('init') {
+            steps {
+                dir('day-1') {
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        stage('plan') {
+            steps {
+                dir('day-1') {
+                    sh 'terraform plan'
+                }
+            }
+        }
+
+        stage('approve plan') {
+            steps {
+                input 'Do you want to apply the changes?'
+            }
+        }
+
+        stage('apply') {
+            steps {
+                dir('day-1') {
+                    sh 'terraform apply -auto-approve'
+                }
+            }
+        }
+
+    }
+}
+
+
+// init , plan , validate ,fmt ,approval , apply
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/Goutham-id06/terraform.git'
+            }
+        }
+
+        stage('Init') {
+            steps {
+                dir('day-1') {
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        stage('Validate') {
+            steps {
+                dir('day-1') {
+                    sh 'terraform validate'
+                }
+            }
+        }
+
+        stage('Fmt Check') {
+            steps {
+                dir('day-1') {
+                    sh 'terraform fmt -check'
+                }
+            }
+        }
+
+        stage('Plan') {
+            steps {
+                dir('day-1') {
+                    sh 'terraform plan'
+                }
+            }
+        }
+
+        stage('Approval') {
+            steps {
+                input 'Approve Terraform Apply?'
+            }
+        }
+
+        stage('Apply') {
+            steps {
+                dir('day-1') {
+                    sh "terraform ${action} -auto-approve"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Infrastructure provisioned successfully'
+        }
+
+        failure {
+            echo 'Terraform deployment failed'
+        }
+    }
+}
+
+//scripted pipelines.
+node {
+
+    properties([
+        parameters([
+            choice(
+                name: 'action',
+                choices: ['apply', 'destroy'],
+                description: 'Choose Terraform action'
+            )
+        ])
+    ])
+
+    stage('clone') {
+        git branch: 'main',
+            url: 'https://github.com/Goutham-id06/terraform.git'
+    }
+
+    stage('init') {
+        dir('day-1') {
+            sh 'terraform init'
+        }
+    }
+
+    stage('plan') {
+        dir('day-1') {
+            sh 'terraform plan'
+        }
+    }
+
+    stage('approve') {
+        input 'Do you want to continue with the Terraform changes?'
+    }
+
+    stage('apply') {
+        dir('day-1') {
+            if (params.action == 'apply') {
+                sh 'terraform apply -auto-approve'
+            } else {
+                sh 'terraform destroy -auto-approve'
+            }
+        }
+    }
+}
