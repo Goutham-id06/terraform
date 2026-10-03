@@ -1,0 +1,14 @@
+pipeline {
+    agent {
+        label 'test'
+    }
+
+    stages {
+        stage('clone') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/Goutham-id06/terraform.git'
+            }
+        }
+    }
+}
